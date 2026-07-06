@@ -1,0 +1,164 @@
+item.rfdrills:leadstone_drill.name=Leadstone Mining Drill
+item.rfdrills:hardened_drill.name=Hardened Mining Drill
+item.rfdrills:redstone_drill.name=Redstone Mining Drill
+item.rfdrills:resonant_drill.name=Resonant Mining Drill
+item.rfdrills:basic_drill.name=Basic Mining Drill
+item.rfdrills:advanced_drill.name=Advanced Mining Drill
+
+item.rfdrills:flux_infused_crusher.name=Flux-Infused Crusher
+item.rfdrills:soul_crusher.name=Dark Soularium Crusher
+item.rfdrills:flux_hoe.name=Flux Hoe
+
+item.rfdrills:leadstone_chainsaw.name=Leadstone Chainsaw
+item.rfdrills:hardened_chainsaw.name=Hardened Chainsaw
+item.rfdrills:redstone_chainsaw.name=Redstone Chainsaw
+item.rfdrills:resonant_chainsaw.name=Resonant Chainsaw
+item.rfdrills:basic_chainsaw.name=Basic Chainsaw
+item.rfdrills:advanced_chainsaw.name=Advanced Chainsaw
+
+item.rfdrills:leadstone_motor.name=Leadstone Motor
+item.rfdrills:hardened_motor.name=Hardened Motor
+item.rfdrills:redstone_motor_frame.name=Redstone Motor Frame
+item.rfdrills:redstone_motor.name=Redstone Motor
+item.rfdrills:resonant_motor_frame.name=Resonant Motor Frame
+item.rfdrills:resonant_motor.name=Resonant Motor
+item.rfdrills:basic_motor.name=Basic Motor
+item.rfdrills:advanced_motor.name=Advanced Motor
+
+item.rfdrills:resonating_crystal.name=Resonating Crystal
+item.rfdrills:destructive_crystal.name=Destructive Crystal
+item.rfdrills:earthshaking_crystal.name=Earthshaking Crystal
+item.rfdrills:soularium_nugget.name=Soularium Nugget
+item.rfdrills:dark_soularium.name=Dark Soularium
+item.rfdrills:dark_soularium_nugget.name=Dark Soularium Nugget
+item.rfdrills:superconductance_coil.name=Redstone Superconductance Coil
+item.rfdrills:fluctuating_core.name=Fluctuating Core
+item.rfdrills:fluctuating_core_frame.name=Fluctuating Core Frame
+
+item.rfdrills:obsidian_rod.name=Obsidian Rod
+item.rfdrills:flux_obsidian_rod.name=Infused Obsidian Rod
+
+
+rfdrills.hoe.tooltip=§aAlso serves as a sickle.
+rfdrills.drill.tooltip=§aServes as a pick and a shovel.
+rfdrills.chainsaw.tooltip=§aAlso serves as shears.
+rfdrills.crusher.tooltip=§aServes as a pick, a shovel and an axe.
+rfdrills.energy_per_block.tooltip=Energy per block: %s RF
+rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
+rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears mode.
+rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
+rfdrills.chainsaw_has_modes.sneak.tooltip=§b§oUse while sneaking to toggle shears mode.
+rfdrills.drill_has_modes.sneak.tooltip=§b§oUse while sneaking to switch mining modes.
+rfdrills.enchantable.tooltip=§aCan be enchanted.
+rfdrills.silent.tooltip=§aMuffled mode switching sound.
+rfdrills.replacement.tooltip1=%s is not installed.
+rfdrills.replacement.tooltip2=So instead, have this blatant rip-off
+rfdrills.replacement.tooltip3=of one of its items.
+
+
+rfdrills.soul_upgrade.tooltip=Upgrade for the Dark Soularium Crusher
+rfdrills.soul_upgrade.recipe=Anvil Recipes:
+
+rfdrills.upgrade.beast_mode=Beast Mode
+rfdrills.upgrade.beast_mode.recipe1=Destructive Crystal + 10 lvs
+rfdrills.upgrade.beast_mode.recipe2=Earthshaking Crystal + 10 lvs
+rfdrills.upgrade.beast_mode.desc1=Allows for 3x3x3 mining
+rfdrills.upgrade.beast_mode.desc2=Allows for 5x5x5 mining
+rfdrills.upgrade.beast_mode.desc1.fork=Allows for 3x3x3 mining/tilling
+rfdrills.upgrade.beast_mode.desc2.fork=Allows for 5x5x5 mining/tilling
+
+rfdrills.upgrade.empowered=Empowered
+rfdrills.upgrade.empowered.recipe1=Basic Capacitor + 10 lvs
+rfdrills.upgrade.empowered.recipe2=Double-Layer Capacitor + 10 lvs
+rfdrills.upgrade.empowered.recipe3=Octadic Capacitor + 10 lvs
+rfdrills.upgrade.empowered.desc1=Increases energy capacity
+rfdrills.upgrade.empowered.desc2=Unlocks other upgrades
+
+rfdrills.upgrade.fork=Fork
+rfdrills.upgrade.fork.recipe1=Diamond Hoe + 10 lvs
+rfdrills.upgrade.fork.desc1.1=Who needs a hoe
+rfdrills.upgrade.fork.desc1.2=when you have a fork?
+
+
+rfdrills.level.1=I
+rfdrills.level.2=II
+rfdrills.level.3=III
+
+
+rfdrills.shears_on.mode=Shears: §aOn
+rfdrills.shears_off.mode=Shears: §cOff
+rfdrills.5x5x5.mode=Mode: §a5x5x5
+rfdrills.3x3x3.mode=Mode: §e3x3x3
+rfdrills.1x3x1.mode=Mode: §e1x3x1
+rfdrills.1x1x1.mode=Mode: §c1x1x1
+
+config.general=General
+config.general.tooltip=Configure main gameplay settings
+config.drill_tier1=Drill Tier 1
+config.drill_tier1.tooltip=Configure properties of Tier 1 drills
+config.drill_tier2=Drill Tier 2
+config.drill_tier2.tooltip=Configure properties of Tier 2 drills
+config.drill_tier3=Drill Tier 3
+config.drill_tier3.tooltip=Configure properties of Tier 3 drills
+config.drill_tier4=Drill Tier 4
+config.drill_tier4.tooltip=Configure properties of Tier 4 drills
+config.flux_crusher=Flux-Infused Crusher
+config.flux_crusher.tooltip=Configure properties of the Flux-Infused Crusher
+config.soul_crusher=Dark Soularium Crusher
+config.soul_crusher.tooltip=Configure properties of the Dark Soularium Crusher
+config.hoe=Flux Hoe
+config.hoe.tooltip=Configure properties of the Flux Hoe
+config.chainsaw_tier1=Chainsaw Tier 1
+config.chainsaw_tier1.tooltip=Configure properties of Tier 1 chainsaws
+config.chainsaw_tier2=Chainsaw Tier 2
+config.chainsaw_tier2.tooltip=Configure properties of Tier 2 chainsaws
+config.chainsaw_tier3=Chainsaw Tier 3
+config.chainsaw_tier3.tooltip=Configure properties of Tier 3 chainsaws
+config.chainsaw_tier4=Chainsaw Tier 4
+config.chainsaw_tier4.tooltip=Configure properties of Tier 4 chainsaws
+
+config.maxEnergy=Maximum Energy
+config.maxEnergy.tooltip=The max amount of energy that the tool can hold
+config.energyPerBlock=Energy Per Block
+config.energyPerBlock.tooltip=The amount of energy that the tool uses to mine 1 block (uses twice as much energy for attacking)
+config.rechargeRate=Recharge Rate
+config.rechargeRate.tooltip=RF that the tool can recharge per tick
+config.canBreak=Can Break
+config.canBreak.tooltip=Can the tool break when it runs out of energy
+config.hasModes=Has Modes
+config.hasModes.tooltip=Can the tool change modes
+config.miningLevel=Mining Level
+config.miningLevel.tooltip=Mining level of the tool (1 - can mine iron, 2 - can mine diamonds etc.)
+config.efficiency=Efficiency
+config.efficiency.tooltip=Mining speed of the tool
+config.damage=Damage
+config.damage.tooltip=Damage that the tool does when attacking enemies
+config.enchant=Enchantibility
+config.enchant.tooltip=Enchantiblity of the tool (0 - not enchantable)
+
+config.integrateTE=Enable TE integration
+config.integrateTE.tooltip=Set this to "false" to disable Thermal Expansion integration
+config.integrateEIO=Enable EIO integration
+config.integrateEIO.tooltip=Set this to "false" to disable EnderIO integration
+config.integrateRArs=Enable RA integration
+config.integrateRArs.tooltip=Set this to "false" to disable Redstone Arsenal integration
+config.shearsDefault=Shears default
+config.shearsDefault.tooltip=Set this to "false" to disable shears functionality for lower tier chainsaws
+config.modeSoundTE=TE Mode Switch Sound
+config.modeSoundTE.tooltip=Set this to "false" to disable sound effects when switching modes with Thermal Expansion tools.
+config.modeSoundEIO=EIO Mode Switch Sound
+config.modeSoundEIO.tooltip=Set this to "true" to enable sound effects when switching modes with EnderIO tools.
+config.modeShiftClickTE=TE Mode Switch Shift+Click
+config.modeShiftClickTE.tooltip=Set this to "true" to enable mode switching with a sneak-right click for Thermal Expansion tools (by default it uses the CoFH Empower key)
+config.modeShiftClickEIO=EIO Mode Switch Shift+Click
+config.modeShiftClickEIO.tooltip=Set this to "false" to disable mode switching with a sneak-right click for EnderIO tools (it will use the CoFH Empower key)
+config.animationType=Mining Animation Type
+config.animationType.tooltip=Change the Drill/Chainsaw mining animation (0 = normal "swinging animation", 1 = "bow animation" in 3rd person only, 2 = "bow animation" in 1st and 3rd person")
+
+option.rfdrills.waila_rf=Show RF usage
+option.rfdrills.waila_rf.sneakingonly=Sneak only: Show RF usage
+option.rfdrills.waila_mode=Show mining mode
+option.rfdrills.waila_mode.sneakingonly=Sneak only: Show mining mode
+
+
+itemGroup.rfdrills=RFDrills
