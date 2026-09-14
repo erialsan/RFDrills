@@ -1,7 +1,7 @@
 package goldenapple.rfdrills.item;
 
-import goldenapple.rfdrills.RFDrills;
-import goldenapple.rfdrills.reference.Reference;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,17 +11,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
-import java.util.List;
+import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.reference.Reference;
 
 public class ItemMultiMetadata extends Item {
+
     private String[] names;
     private IIcon[] icons;
     private String defaultName;
     private EnumRarity[] rarities;
     private String[][] tooltips;
-    private boolean[] effects; //enchantement glow
+    private boolean[] effects; // enchantement glow
 
-    public ItemMultiMetadata(String[] names, String defaultName){
+    public ItemMultiMetadata(String[] names, String defaultName) {
         this.names = names;
         this.icons = new IIcon[names.length];
         this.defaultName = defaultName;
@@ -29,25 +31,25 @@ public class ItemMultiMetadata extends Item {
         this.setHasSubtypes(true);
     }
 
-    public void setRarities(EnumRarity... rarities){
+    public void setRarities(EnumRarity... rarities) {
         this.rarities = rarities;
     }
 
-    public void setTooltips(String[]... tooltips){
+    public void setTooltips(String[]... tooltips) {
         this.tooltips = tooltips;
     }
 
-    public void setEffects(boolean... effects){
+    public void setEffects(boolean... effects) {
         this.effects = effects;
     }
 
     @Override
     public EnumRarity getRarity(ItemStack itemStack) {
-        if(rarities == null){
+        if (rarities == null) {
             return EnumRarity.common;
-        }else if(itemStack.getItemDamage() >= rarities.length){
+        } else if (itemStack.getItemDamage() >= rarities.length) {
             return EnumRarity.common;
-        }else{
+        } else {
             return rarities[itemStack.getItemDamage()];
         }
     }
@@ -55,10 +57,10 @@ public class ItemMultiMetadata extends Item {
     @Override
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean iHaveNoIdea) {
-        if(tooltips == null) return;
+        if (tooltips == null) return;
 
-        if(itemStack.getItemDamage() < tooltips.length && tooltips[itemStack.getItemDamage()] != null){
-            for(String string : tooltips[itemStack.getItemDamage()]){
+        if (itemStack.getItemDamage() < tooltips.length && tooltips[itemStack.getItemDamage()] != null) {
+            for (String string : tooltips[itemStack.getItemDamage()]) {
                 list.add(StatCollector.translateToLocal(string));
             }
         }
@@ -66,11 +68,11 @@ public class ItemMultiMetadata extends Item {
 
     @Override
     public boolean hasEffect(ItemStack itemStack, int pass) {
-        if(effects == null) {
+        if (effects == null) {
             return false;
-        }else if(itemStack.getItemDamage() >= effects.length){
+        } else if (itemStack.getItemDamage() >= effects.length) {
             return false;
-        }else{
+        } else {
             return effects[itemStack.getItemDamage()];
         }
     }
@@ -78,7 +80,7 @@ public class ItemMultiMetadata extends Item {
     @Override
     @SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
-        for(int i = 0; i < names.length; i++){
+        for (int i = 0; i < names.length; i++) {
             list.add(new ItemStack(item, 1, i));
         }
     }
@@ -95,7 +97,7 @@ public class ItemMultiMetadata extends Item {
 
     @Override
     public void registerIcons(IIconRegister register) {
-        for(int i = 0; i < names.length; i++){
+        for (int i = 0; i < names.length; i++) {
             icons[i] = register.registerIcon(Reference.MOD_ID + ":" + names[i]);
         }
     }
@@ -107,6 +109,8 @@ public class ItemMultiMetadata extends Item {
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
-        return itemStack.getItemDamage() < names.length ? "item." + Reference.MOD_ID + ":" + names[itemStack.getItemDamage()] : getUnlocalizedName();
+        return itemStack.getItemDamage() < names.length
+            ? "item." + Reference.MOD_ID + ":" + names[itemStack.getItemDamage()]
+            : getUnlocalizedName();
     }
 }

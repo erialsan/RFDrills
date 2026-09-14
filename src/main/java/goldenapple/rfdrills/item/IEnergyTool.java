@@ -1,10 +1,12 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public interface IEnergyTool extends IEnergyContainerItem{
+import cofh.api.energy.IEnergyContainerItem;
+
+public interface IEnergyTool extends IEnergyContainerItem {
+
     public ToolTier getTier(ItemStack stack);
 
     public ItemStack setEnergy(ItemStack stack, int energy);

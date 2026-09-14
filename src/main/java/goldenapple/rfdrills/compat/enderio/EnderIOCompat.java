@@ -1,32 +1,37 @@
 package goldenapple.rfdrills.compat.enderio;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
-import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EnderIOCompat { //shamelessly stolen from Simply Jetpacks https://github.com/Tonius/SimplyJetpacks/blob/master/src/main/java/tonius/simplyjetpacks/integration/EIORecipes.java
-    public static void addAlloySmelterRecipe(String name, int energy, ItemStack primaryInput, ItemStack secondaryInput, ItemStack tertiaryInput, ItemStack output) {
+import cpw.mods.fml.common.event.FMLInterModComms;
+import goldenapple.rfdrills.reference.Reference;
+
+public class EnderIOCompat { // shamelessly stolen from Simply Jetpacks
+                             // https://github.com/Tonius/SimplyJetpacks/blob/master/src/main/java/tonius/simplyjetpacks/integration/EIORecipes.java
+
+    public static void addAlloySmelterRecipe(String name, int energy, ItemStack primaryInput, ItemStack secondaryInput,
+        ItemStack tertiaryInput, ItemStack output) {
         StringBuilder toSend = new StringBuilder();
 
         toSend.append("<recipeGroup name=\"" + Reference.MOD_ID + "\">");
-            toSend.append("<recipe name=\"" + name + "\" energyCost=\"" + energy + "\">");
-                toSend.append("<input>");
-                    writeItemStack(toSend, primaryInput);
-                    writeItemStack(toSend, secondaryInput);
-                    writeItemStack(toSend, tertiaryInput);
-                toSend.append("</input>");
-                toSend.append("<output>");
-                    writeItemStack(toSend, output);
-                toSend.append("</output>");
-            toSend.append("</recipe>");
+        toSend.append("<recipe name=\"" + name + "\" energyCost=\"" + energy + "\">");
+        toSend.append("<input>");
+        writeItemStack(toSend, primaryInput);
+        writeItemStack(toSend, secondaryInput);
+        writeItemStack(toSend, tertiaryInput);
+        toSend.append("</input>");
+        toSend.append("<output>");
+        writeItemStack(toSend, output);
+        toSend.append("</output>");
+        toSend.append("</recipe>");
         toSend.append("</recipeGroup>");
 
         FMLInterModComms.sendMessage("EnderIO", "recipe:alloysmelter", toSend.toString());
     }
 
-    public static void addSoulBinderRecipe(String recipeID, int energy, int xp, String soulTypes, ItemStack input, ItemStack output) {
+    public static void addSoulBinderRecipe(String recipeID, int energy, int xp, String soulTypes, ItemStack input,
+        ItemStack output) {
         NBTTagCompound toSend = new NBTTagCompound();
 
         toSend.setString("recipeUID", recipeID);
@@ -49,8 +54,17 @@ public class EnderIOCompat { //shamelessly stolen from Simply Jetpacks https://g
 
     private static void writeItemStack(StringBuilder sb, ItemStack stack) {
         if (stack != null) {
-            String[] itemName = Item.itemRegistry.getNameForObject(stack.getItem()).split(":");
-            sb.append("<itemStack modID=\"" + itemName[0] + "\" itemName=\"" + itemName[1] + "\" itemMeta=\"" + stack.getItemDamage() + "\" number=\"" + stack.stackSize + "\" />");
+            String[] itemName = Item.itemRegistry.getNameForObject(stack.getItem())
+                .split(":");
+            sb.append(
+                "<itemStack modID=\"" + itemName[0]
+                    + "\" itemName=\""
+                    + itemName[1]
+                    + "\" itemMeta=\""
+                    + stack.getItemDamage()
+                    + "\" number=\""
+                    + stack.stackSize
+                    + "\" />");
         }
     }
 }

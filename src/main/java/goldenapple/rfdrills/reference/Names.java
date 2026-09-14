@@ -1,6 +1,7 @@
 package goldenapple.rfdrills.reference;
 
 public class Names {
+
     public static final String LEADSTONE_DRILL = "leadstone_drill";
     public static final String HARDENED_DRILL = "hardened_drill";
     public static final String REDSTONE_DRILL = "redstone_drill";
@@ -20,29 +21,17 @@ public class Names {
     public static final String FLUX_HOE = "flux_hoe";
 
     public static final String COMPONENT_TE = "motor_te";
-    public static final String[] COMPONENTS_TE = {"leadstone_motor",
-                                              "hardened_motor",
-                                              "redstone_motor",
-                                              "redstone_motor_frame",
-                                              "resonant_motor",
-                                              "resonant_motor_frame",
-                                              "fluctuating_core",
-                                              "fluctuating_core_frame",
-                                              "superconductance_coil"};
+    public static final String[] COMPONENTS_TE = { "leadstone_motor", "hardened_motor", "redstone_motor",
+        "redstone_motor_frame", "resonant_motor", "resonant_motor_frame", "fluctuating_core", "fluctuating_core_frame",
+        "superconductance_coil" };
 
     public static final String COMPONENT_EIO = "motor_eio";
-    public static       String[] COMPONENTS_EIO = {"basic_motor",
-                                               "advanced_motor",
-                                               "resonating_crystal",
-                                               "soularium_nugget",
-                                               "dark_soularium_nugget",
-                                               "destructive_crystal",
-                                               "earthshaking_crystal"};
+    public static String[] COMPONENTS_EIO = { "basic_motor", "advanced_motor", "resonating_crystal", "soularium_nugget",
+        "dark_soularium_nugget", "destructive_crystal", "earthshaking_crystal" };
 
     public static final String REPLACEMENT_SJ = "sj_replacement";
-    public static final String[] SJ_REPLACEMENTS = {"dark_soularium"};
+    public static final String[] SJ_REPLACEMENTS = { "dark_soularium" };
 
     public static final String REPLACEMENT_RA1 = "ra_replacement";
-    public static final String[] RA_REPLACEMENTS = {"obsidian_rod",
-                                                    "flux_obsidian_rod"};
+    public static final String[] RA_REPLACEMENTS = { "obsidian_rod", "flux_obsidian_rod" };
 }

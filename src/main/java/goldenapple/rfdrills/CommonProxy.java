@@ -1,9 +1,10 @@
 package goldenapple.rfdrills;
 
 public class CommonProxy {
-    public void preInit(){}
 
-    public void init(){}
+    public void preInit() {}
 
-    public void postInit(){}
+    public void init() {}
+
+    public void postInit() {}
 }

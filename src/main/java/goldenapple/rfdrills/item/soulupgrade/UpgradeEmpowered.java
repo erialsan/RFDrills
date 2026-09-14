@@ -1,12 +1,14 @@
 package goldenapple.rfdrills.item.soulupgrade;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
-import java.util.List;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class UpgradeEmpowered extends AbstractSoulUpgrade {
+
     @Override
     public String getUnlocalizedName() {
         return "empowered";
@@ -25,7 +27,8 @@ public class UpgradeEmpowered extends AbstractSoulUpgrade {
 
     @Override
     public boolean isRecipeValid(int level, ItemStack itemStack) {
-        return itemStack.getItem() == GameRegistry.findItem("EnderIO", "itemBasicCapacitor") && itemStack.getItemDamage() + 1 == level;
+        return itemStack.getItem() == GameRegistry.findItem("EnderIO", "itemBasicCapacitor")
+            && itemStack.getItemDamage() + 1 == level;
     }
 
     @Override

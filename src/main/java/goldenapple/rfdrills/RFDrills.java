@@ -1,5 +1,11 @@
 package goldenapple.rfdrills;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
+import net.minecraftforge.common.MinecraftForge;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -16,14 +22,15 @@ import goldenapple.rfdrills.init.ModItems;
 import goldenapple.rfdrills.init.ModRecipes;
 import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeRecipeHandler;
 import goldenapple.rfdrills.reference.Reference;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, name = Reference.MOD_NAME, guiFactory = Reference.GUI_FACTORY, dependencies = Reference.DEPENDENCIES)
+@Mod(
+    modid = Reference.MOD_ID,
+    version = Reference.VERSION,
+    name = Reference.MOD_NAME,
+    guiFactory = Reference.GUI_FACTORY,
+    dependencies = Reference.DEPENDENCIES)
 public class RFDrills {
+
     @Mod.Instance
     public static RFDrills instance;
     @SidedProxy(serverSide = Reference.COMMON_PROXY, clientSide = Reference.CLIENT_PROXY)
@@ -48,10 +55,13 @@ public class RFDrills {
         isXULoaded = Loader.isModLoaded("ExtraUtilities");
         isWailaLoaded = Loader.isModLoaded("Waila");
 
-        FMLCommonHandler.instance().bus().register(new ConfigHandler(event.getSuggestedConfigurationFile()));
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new ConfigHandler(event.getSuggestedConfigurationFile()));
 
-        if((ConfigHandler.integrateTE && isTELoaded) || (ConfigHandler.integrateEIO && isEIOLoaded)) {
+        if ((ConfigHandler.integrateTE && isTELoaded) || (ConfigHandler.integrateEIO && isEIOLoaded)) {
             RFDrillsTab = new CreativeTabs(Reference.MOD_ID) {
+
                 @Override
                 public ItemStack getIconItemStack() {
                     ItemStack itemStack = new ItemStack(getTabIconItem());
@@ -61,10 +71,8 @@ public class RFDrills {
 
                 @Override
                 public Item getTabIconItem() {
-                    if (ConfigHandler.integrateTE)
-                        return ModItems.redstoneDrill;
-                    else
-                        return ModItems.basicDrill;
+                    if (ConfigHandler.integrateTE) return ModItems.redstoneDrill;
+                    else return ModItems.basicDrill;
                 }
             };
         }
@@ -75,19 +83,17 @@ public class RFDrills {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        if(isWailaLoaded)
-            FMLInterModComms.sendMessage("Waila", "register", WailaCompat.class.getName() + ".init");
+        if (isWailaLoaded) FMLInterModComms.sendMessage("Waila", "register", WailaCompat.class.getName() + ".init");
         VersionCheckerCompat.init();
         ModRecipes.init();
 
-        if(ConfigHandler.integrateEIO)
-            MinecraftForge.EVENT_BUS.register(new SoulUpgradeRecipeHandler());
+        if (ConfigHandler.integrateEIO) MinecraftForge.EVENT_BUS.register(new SoulUpgradeRecipeHandler());
         proxy.init();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
-        //OreHelper.dumpAllOres();
+        // OreHelper.dumpAllOres();
     }
 }

@@ -1,7 +1,5 @@
 package goldenapple.rfdrills.util;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import goldenapple.rfdrills.item.IEnergyTool;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,34 +14,39 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
+import cpw.mods.fml.common.eventhandler.Event;
+import goldenapple.rfdrills.item.IEnergyTool;
+
 public class ToolHelper {
-    public static boolean isToolEffective(ItemStack stack, World world, int x, int y, int z){
+
+    public static boolean isToolEffective(ItemStack stack, World world, int x, int y, int z) {
         Block block = world.getBlock(x, y, z);
-        if(block.getBlockHardness(world, x, y, z) < 0) //unbreakable
+        if (block.getBlockHardness(world, x, y, z) < 0) // unbreakable
             return false;
-        else
-            return isToolEffective(stack, block, world.getBlockMetadata(x, y, z)) || block.getBlockHardness(world, x, y, z) == 0;
+        else return isToolEffective(stack, block, world.getBlockMetadata(x, y, z))
+            || block.getBlockHardness(world, x, y, z) == 0;
     }
 
-    public static boolean isToolEffective(ItemStack stack, Block block, int meta){
-        if(block == null)
-            return false;
+    public static boolean isToolEffective(ItemStack stack, Block block, int meta) {
+        if (block == null) return false;
 
-        if(stack != null) {
-            for (String toolClass : stack.getItem().getToolClasses(stack)) {
-                if (toolClass.equals(block.getHarvestTool(meta)))
-                    return stack.getItem().getHarvestLevel(stack, toolClass) >= block.getHarvestLevel(meta);
+        if (stack != null) {
+            for (String toolClass : stack.getItem()
+                .getToolClasses(stack)) {
+                if (toolClass.equals(block.getHarvestTool(meta))) return stack.getItem()
+                    .getHarvestLevel(stack, toolClass) >= block.getHarvestLevel(meta);
             }
 
-            return stack.getItem().canHarvestBlock(block, stack);
+            return stack.getItem()
+                .canHarvestBlock(block, stack);
         }
         return false;
     }
 
-    public static void drainEnergy(ItemStack stack, EntityPlayer player, int energy){
-        if(player.capabilities.isCreativeMode) return;
+    public static void drainEnergy(ItemStack stack, EntityPlayer player, int energy) {
+        if (player.capabilities.isCreativeMode) return;
 
-        IEnergyTool tool = (IEnergyTool)stack.getItem();
+        IEnergyTool tool = (IEnergyTool) stack.getItem();
 
         tool.drainEnergy(stack, energy);
         player.setCurrentItemOrArmor(0, stack);
@@ -55,53 +58,55 @@ public class ToolHelper {
         }
     }
 
-    public static void harvestBlock(World world, int x, int y, int z, EntityPlayer entityPlayer){
+    public static void harvestBlock(World world, int x, int y, int z, EntityPlayer entityPlayer) {
         Block block = world.getBlock(x, y, z);
         int meta = world.getBlockMetadata(x, y, z);
 
-        if (!(entityPlayer instanceof EntityPlayerMP))
-            return;
+        if (!(entityPlayer instanceof EntityPlayerMP)) return;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        if(!ForgeEventFactory.doPlayerHarvestCheck(player, block, isToolEffective(player.getCurrentEquippedItem(), world, x, y, z)))
-            if(!player.capabilities.isCreativeMode)
-                return;
+        if (!ForgeEventFactory
+            .doPlayerHarvestCheck(player, block, isToolEffective(player.getCurrentEquippedItem(), world, x, y, z)))
+            if (!player.capabilities.isCreativeMode) return;
 
-        BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
-        if(event.isCanceled())
-            return;
+        BlockEvent.BreakEvent event = ForgeHooks
+            .onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
+        if (event.isCanceled()) return;
 
-        if(!world.isRemote){ //Server-side: Simulating ItemInWorldManager
+        if (!world.isRemote) { // Server-side: Simulating ItemInWorldManager
             block.onBlockHarvested(world, x, y, z, meta, player);
 
-            if(block.removedByPlayer(world, player, x, y, z, true)) {
+            if (block.removedByPlayer(world, player, x, y, z, true)) {
                 block.onBlockDestroyedByPlayer(world, x, y, z, meta);
-                if(!player.capabilities.isCreativeMode && world.getGameRules().getGameRuleBooleanValue("doTileDrops")) {
+                if (!player.capabilities.isCreativeMode && world.getGameRules()
+                    .getGameRuleBooleanValue("doTileDrops")) {
                     block.harvestBlock(world, player, x, y, z, meta);
                     block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
                 }
                 world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + meta << 12);
             }
-        }else { //Client-side: Simulating PlayerControllerMP
-            if(block.removedByPlayer(world, player, x, y ,z, true))
+        } else { // Client-side: Simulating PlayerControllerMP
+            if (block.removedByPlayer(world, player, x, y, z, true))
                 block.onBlockDestroyedByPlayer(world, x, y, z, meta);
         }
     }
 
-    public static boolean hoeBlock(ItemStack stack, World world, int x, int y, int z, int sideHit, EntityPlayer player){
+    public static boolean hoeBlock(ItemStack stack, World world, int x, int y, int z, int sideHit,
+        EntityPlayer player) {
         Block block = world.getBlock(x, y, z);
 
         UseHoeEvent event = new UseHoeEvent(player, stack, world, x, y, z);
-        if(MinecraftForge.EVENT_BUS.post(event)) //if the event got canceled
+        if (MinecraftForge.EVENT_BUS.post(event)) // if the event got canceled
             return false;
 
-        if (event.getResult() == Event.Result.ALLOW) //if another mod handled this block using the event
+        if (event.getResult() == Event.Result.ALLOW) // if another mod handled this block using the event
             return true;
 
-        //vanilla hoe behaviour
-        if (sideHit != 0 && world.isAirBlock(x, y + 1, z) && (block == Blocks.grass || block == Blocks.dirt) && player.canPlayerEdit(x, y, z, sideHit, stack)) {
-            if (!world.isRemote)
-                world.setBlock(x, y, z, Blocks.farmland);
+        // vanilla hoe behaviour
+        if (sideHit != 0 && world.isAirBlock(x, y + 1, z)
+            && (block == Blocks.grass || block == Blocks.dirt)
+            && player.canPlayerEdit(x, y, z, sideHit, stack)) {
+            if (!world.isRemote) world.setBlock(x, y, z, Blocks.farmland);
             return true;
         }
 

@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class UpgradeFork extends AbstractSoulUpgrade {
+
     @Override
     public String getUnlocalizedName() {
         return "fork";
@@ -26,6 +27,7 @@ public class UpgradeFork extends AbstractSoulUpgrade {
 
     @Override
     public boolean isUpgradeAvailable(ItemStack itemStack) {
-        return super.isUpgradeAvailable(itemStack) && SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeEmpowered) >= 1;
+        return super.isUpgradeAvailable(itemStack)
+            && SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeEmpowered) >= 1;
     }
 }

@@ -1,17 +1,8 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.item.IEmpowerableItem;
-import cofh.core.item.IEqualityOverrideItem;
-import cofh.core.util.KeyBindingEmpower;
-import cofh.lib.util.helpers.BlockHelper;
-import cofh.repack.codechicken.lib.math.MathHelper;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import goldenapple.rfdrills.RFDrills;
-import goldenapple.rfdrills.reference.Reference;
-import goldenapple.rfdrills.util.MiscUtil;
-import goldenapple.rfdrills.util.StringHelper;
-import goldenapple.rfdrills.util.ToolHelper;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -26,17 +17,42 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+
+import cofh.api.item.IEmpowerableItem;
+import cofh.core.item.IEqualityOverrideItem;
+import cofh.core.util.KeyBindingEmpower;
+import cofh.lib.util.helpers.BlockHelper;
+import cofh.repack.codechicken.lib.math.MathHelper;
+import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.reference.Reference;
+import goldenapple.rfdrills.util.MiscUtil;
+import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 
 public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
-    private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
+
+    private static final Set<Material> effectiveMaterials = Sets.newHashSet(
+        Material.anvil,
+        Material.clay,
+        Material.craftedSnow,
+        Material.glass,
+        Material.dragonEgg,
+        Material.grass,
+        Material.ground,
+        Material.ice,
+        Material.snow,
+        Material.iron,
+        Material.rock,
+        Material.sand,
+        Material.coral);
 
     private final ToolTier tier;
     private final String name;
     private EnumModType modType;
 
-    public ItemDrill(String name, ToolTier tier){
+    public ItemDrill(String name, ToolTier tier) {
         super(1.0F, tier.material, null);
         this.name = name;
         this.tier = tier;
@@ -45,7 +61,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
     }
 
-    public ItemDrill setModType(EnumModType modType){
+    public ItemDrill setModType(EnumModType modType) {
         this.modType = modType;
         return this;
     }
@@ -57,47 +73,60 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean canHarvestBlock(Block block, ItemStack stack) {
-        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial());
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack)
+            && effectiveMaterials.contains(block.getMaterial());
     }
 
     @Override
     public float func_150893_a(ItemStack stack, Block block) {
-        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack)
+            && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
     }
 
     @Override
     public float getDigSpeed(ItemStack stack, Block block, int meta) {
-        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta)){
-            if(isEmpowered(stack))
-                return efficiencyOnProperMaterial / 3;
-            else
-                return efficiencyOnProperMaterial;
-        }else
-           return 1.0F;
+        if (getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta)
+            && ToolHelper.isToolEffective(stack, block, meta)) {
+            if (isEmpowered(stack)) return efficiencyOnProperMaterial / 3;
+            else return efficiencyOnProperMaterial;
+        } else return 1.0F;
     }
 
     @Override
     public int getHarvestLevel(ItemStack stack, String toolClass) {
-        if(getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= tier.energyPerBlock){
+        if (getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= tier.energyPerBlock) {
             return super.getHarvestLevel(stack, toolClass);
-        }else{
+        } else {
             return -1;
         }
     }
 
-    private int getEnergyPerUse(ItemStack stack){
-        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
+    private int getEnergyPerUse(ItemStack stack) {
+        return Math.round(
+            tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); // Vanilla
+                                                                                                                        // formula:
+                                                                                                                        // a
+                                                                                                                        // 100%
+                                                                                                                        // /
+                                                                                                                        // (unbreaking
+                                                                                                                        // level
+                                                                                                                        // +
+                                                                                                                        // 1)
+                                                                                                                        // chance
+                                                                                                                        // to
+                                                                                                                        // not
+                                                                                                                        // take
+                                                                                                                        // damage
     }
 
-    private int getEnergyPerUseWithMode(ItemStack stack){
+    private int getEnergyPerUseWithMode(ItemStack stack) {
         int energy = getEnergyPerUse(stack);
-        if(isEmpowered(stack))
-            energy = energy * 3;
+        if (isEmpowered(stack)) energy = energy * 3;
         return energy;
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
         list.add(setEnergy(new ItemStack(item, 1, 0), tier.maxEnergy));
@@ -110,10 +139,8 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean showDurabilityBar(ItemStack stack) {
-        if(stack.hasTagCompound())
-            return !stack.stackTagCompound.getBoolean("isCreativeTabIcon");
-        else
-            return true;
+        if (stack.hasTagCompound()) return !stack.stackTagCompound.getBoolean("isCreativeTabIcon");
+        else return true;
     }
 
     @Override
@@ -130,26 +157,37 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
 
-        if(!world.isRemote && getEnergyStored(stack) > 0){
+        if (!world.isRemote && getEnergyStored(stack) > 0) {
             int xRadius = 0, yRadius = 0, zRadius = 0;
 
-            if(isEmpowered(stack)){
-                if (BlockHelper.getCurrentMousedOverSide(player) == 0 || BlockHelper.getCurrentMousedOverSide(player) == 1) {
-                    switch(MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3) { //Stolen from MineFactoryReloaded https://github.com/powercrystals/MineFactoryReloaded/blob/master/src/powercrystals/minefactoryreloaded/block/BlockConveyor.java
-                        case 0: zRadius = 1; break;
-                        case 1: xRadius = 1; break;
-                        case 2: zRadius = 1; break;
-                        case 3: xRadius = 1; break;
+            if (isEmpowered(stack)) {
+                if (BlockHelper.getCurrentMousedOverSide(player) == 0
+                    || BlockHelper.getCurrentMousedOverSide(player) == 1) {
+                    switch (MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3) { // Stolen from
+                                                                                                    // MineFactoryReloaded
+                                                                                                    // https://github.com/powercrystals/MineFactoryReloaded/blob/master/src/powercrystals/minefactoryreloaded/block/BlockConveyor.java
+                        case 0:
+                            zRadius = 1;
+                            break;
+                        case 1:
+                            xRadius = 1;
+                            break;
+                        case 2:
+                            zRadius = 1;
+                            break;
+                        case 3:
+                            xRadius = 1;
+                            break;
                     }
                 } else {
                     yRadius = 1;
                 }
             }
-            for(int a = x - xRadius; a <= x + xRadius; a++) {
+            for (int a = x - xRadius; a <= x + xRadius; a++) {
                 for (int b = y - yRadius; b <= y + yRadius; b++) {
-                    for(int c = z - zRadius; c <= z + zRadius; c++) {
+                    for (int c = z - zRadius; c <= z + zRadius; c++) {
                         if (world.blockExists(a, b, c) && !world.isAirBlock(x, y, z)) {
-                            if (!(a == x && b == y && c == z)) { //don't harvest the same block twice
+                            if (!(a == x && b == y && c == z)) { // don't harvest the same block twice
                                 ToolHelper.harvestBlock(world, a, b, c, player);
                             }
                         }
@@ -158,13 +196,16 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
             }
         }
 
-        ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
+        ToolHelper.drainEnergy(
+            stack,
+            player,
+            getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
         return false;
     }
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if(entityAttacker instanceof EntityPlayer)
+        if (entityAttacker instanceof EntityPlayer)
             ToolHelper.drainEnergy(stack, (EntityPlayer) entityAttacker, getEnergyPerUse(stack) * 2);
 
         return true;
@@ -172,7 +213,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if(!world.isRemote && player.isSneaking() && MiscUtil.shouldModeShiftClick(this)){
+        if (!world.isRemote && player.isSneaking() && MiscUtil.shouldModeShiftClick(this)) {
             setEmpoweredState(stack, !isEmpowered(stack));
             onStateChange(player, stack);
         }
@@ -180,29 +221,25 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
         list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
 
         if (MiscUtil.isShiftPressed()) {
             list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUseWithMode(stack)));
-            if(tier.hasModes)
-                list.add(writeModeInfo(stack));
+            if (tier.hasModes) list.add(writeModeInfo(stack));
             list.add(StatCollector.translateToLocal("rfdrills.drill.tooltip"));
-            if (tier.canBreak)
-                list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
+            if (tier.canBreak) list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
             if (toolMaterial.getEnchantability() > 0)
                 list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
             if (tier.hasModes) {
                 if (MiscUtil.shouldModeShiftClick(this))
                     list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.sneak.tooltip"));
-                else
-                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
+                else list.add(
+                    StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
             }
-            if(MiscUtil.isItemSilent(stack))
-                list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
-        } else
-            list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
+            if (MiscUtil.isItemSilent(stack)) list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
+        } else list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
 
     @Override
@@ -217,7 +254,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public String getUnlocalizedName() {
-        return "item." +Reference.MOD_ID.toLowerCase() + ":" + name;
+        return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
     @Override
@@ -233,16 +270,15 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    public ItemStack setEnergy(ItemStack stack, int energy){
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+    public ItemStack setEnergy(ItemStack stack, int energy) {
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
         stack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(stack)));
         return stack;
     }
 
     @Override
-    public ItemStack drainEnergy(ItemStack stack, int energy){
+    public ItemStack drainEnergy(ItemStack stack, int energy) {
         return setEnergy(stack, Math.max(getEnergyStored(stack) - energy, 0));
     }
 
@@ -252,13 +288,11 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    public String writeModeInfo(ItemStack stack){
-        if(!tier.hasModes) return "";
+    public String writeModeInfo(ItemStack stack) {
+        if (!tier.hasModes) return "";
 
-        if(isEmpowered(stack))
-            return StatCollector.translateToLocal("rfdrills.1x3x1.mode");
-        else
-            return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
+        if (isEmpowered(stack)) return StatCollector.translateToLocal("rfdrills.1x3x1.mode");
+        else return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
     }
 
     @Override
@@ -269,9 +303,8 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     /* IEnergyContainerItem */
 
     @Override
-    public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+    public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) { // stolen from ItemEnergyContainer
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
         int energy = getEnergyStored(stack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
@@ -290,12 +323,10 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public int getEnergyStored(ItemStack stack) {
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
-        if(stack.stackTagCompound.hasKey("Energy"))
-            return stack.stackTagCompound.getInteger("Energy");
-        else{
+        if (stack.stackTagCompound.hasKey("Energy")) return stack.stackTagCompound.getInteger("Energy");
+        else {
             stack.stackTagCompound.setInteger("Energy", 0);
             return 0;
         }
@@ -310,43 +341,38 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
-        return previous.getItem() == current.getItem(); //used to prevent not being able to mine while the drill is recharging. Otherwise, the mining progress gets reset every tick because of NBT changes
+        return previous.getItem() == current.getItem(); // used to prevent not being able to mine while the drill is
+                                                        // recharging. Otherwise, the mining progress gets reset every
+                                                        // tick because of NBT changes
     }
 
     /* IEmpowerableItem */
 
     @Override
     public boolean isEmpowered(ItemStack stack) {
-        if(!tier.hasModes)
-            return false;
+        if (!tier.hasModes) return false;
 
-        if(stack.stackTagCompound == null)
-            return false;
+        if (stack.stackTagCompound == null) return false;
 
-        if(stack.stackTagCompound.hasKey("Mode"))
-            return stack.stackTagCompound.getByte("Mode") == 1;
-        else
-            return false;
+        if (stack.stackTagCompound.hasKey("Mode")) return stack.stackTagCompound.getByte("Mode") == 1;
+        else return false;
     }
 
     @Override
     public boolean setEmpoweredState(ItemStack stack, boolean b) {
-        if(!tier.hasModes) return false;
+        if (!tier.hasModes) return false;
 
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
-        stack.stackTagCompound.setByte("Mode", b ? (byte)1 : 0);
+        stack.stackTagCompound.setByte("Mode", b ? (byte) 1 : 0);
         return true;
     }
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(!MiscUtil.isItemSilent(stack)) {
-            if (!isEmpowered(stack))
-                player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-            else
-                player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        if (!MiscUtil.isItemSilent(stack)) {
+            if (!isEmpowered(stack)) player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+            else player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
         }
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));
     }

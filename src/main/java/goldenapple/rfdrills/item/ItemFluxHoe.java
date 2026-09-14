@@ -1,15 +1,8 @@
 package goldenapple.rfdrills.item;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import goldenapple.rfdrills.RFDrills;
-import goldenapple.rfdrills.reference.Reference;
-import goldenapple.rfdrills.util.LogHelper;
-import goldenapple.rfdrills.util.MiscUtil;
-import goldenapple.rfdrills.util.StringHelper;
-import goldenapple.rfdrills.util.ToolHelper;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -26,13 +19,25 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.reference.Reference;
+import goldenapple.rfdrills.util.LogHelper;
+import goldenapple.rfdrills.util.MiscUtil;
+import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 
 public class ItemFluxHoe extends ItemTool implements IEnergyTool {
-    public static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.leaves, Material.plants, Material.vine, Material.web);
+
+    public static final Set<Material> effectiveMaterials = Sets
+        .newHashSet(Material.leaves, Material.plants, Material.vine, Material.web);
 
     private static final ToolTier tier = ToolTier.HOE;
+
     public ItemFluxHoe() {
         super(2.0F, tier.material, null);
         this.setCreativeTab(RFDrills.RFDrillsTab);
@@ -45,7 +50,9 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public float func_150893_a(ItemStack stack, Block block) {
-        return getEnergyStored(stack) >= getEnergyPerUse(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+        return getEnergyStored(stack) >= getEnergyPerUse(stack) && effectiveMaterials.contains(block.getMaterial())
+            ? efficiencyOnProperMaterial
+            : 1.0F;
     }
 
     @Override
@@ -54,16 +61,30 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
     }
 
     @Override
-    public boolean isItemTool(ItemStack stack){
+    public boolean isItemTool(ItemStack stack) {
         return true;
     }
 
-    private int getEnergyPerUse(ItemStack stack){
-        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
+    private int getEnergyPerUse(ItemStack stack) {
+        return Math.round(
+            tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); // Vanilla
+                                                                                                                        // formula:
+                                                                                                                        // a
+                                                                                                                        // 100%
+                                                                                                                        // /
+                                                                                                                        // (unbreaking
+                                                                                                                        // level
+                                                                                                                        // +
+                                                                                                                        // 1)
+                                                                                                                        // chance
+                                                                                                                        // to
+                                                                                                                        // not
+                                                                                                                        // take
+                                                                                                                        // damage
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
         list.add(setEnergy(new ItemStack(item, 1, 0), tier.maxEnergy));
@@ -88,42 +109,50 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
 
-        if(world.getBlock(x, y, z).getMaterial().equals(Material.leaves)) { //Harvesting leaves in a 3x3x3 area
+        if (world.getBlock(x, y, z)
+            .getMaterial()
+            .equals(Material.leaves)) { // Harvesting leaves in a 3x3x3 area
             for (int a = x - 1; a <= x + 1; a++) {
-                for(int b = y - 1; b <= y + 1; b++) {
+                for (int b = y - 1; b <= y + 1; b++) {
                     for (int c = z - 1; c <= z + 1; c++) {
                         if (world.blockExists(a, b, c) && !world.isAirBlock(a, b, c)) {
-                            if (!(a == x && b == y && c == z)) { //don't harvest the same block twice
+                            if (!(a == x && b == y && c == z)) { // don't harvest the same block twice
                                 ToolHelper.harvestBlock(world, a, b, c, player);
                             }
                         }
                     }
                 }
             }
-        }else{ //Harvesting everything else in a 3x1x3 area
+        } else { // Harvesting everything else in a 3x1x3 area
             for (int a = x - 1; a <= x + 1; a++) {
                 for (int c = z - 1; c <= z + 1; c++) {
                     if (world.blockExists(a, y, c) && !world.isAirBlock(a, y, c)) {
-                        if(!(a == x && c == z))
-                            ToolHelper.harvestBlock(world, a, y, c, player);
+                        if (!(a == x && c == z)) ToolHelper.harvestBlock(world, a, y, c, player);
                     }
                 }
             }
         }
 
-        ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
+        ToolHelper.drainEnergy(
+            stack,
+            player,
+            getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
         return false;
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
-        if(getEnergyStored(stack) == 0) return false;
-        if(!ToolHelper.hoeBlock(stack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int sideHit,
+        float hitX, float hitY, float hitZ) {
+        if (getEnergyStored(stack) == 0) return false;
+        if (!ToolHelper.hoeBlock(stack, world, x, y, z, sideHit, player)) return false; // if the player right-clicks a
+                                                                                        // block of cobble near a block
+                                                                                        // of dirt we won't till the
+                                                                                        // dirt
 
-        if(!player.isSneaking()) {
+        if (!player.isSneaking()) {
             for (int a = x - 1; a <= x + 1; a++) {
-                for (int c = z - 1; c <= z + 1; c++) { //don't care about y levels with a hoe
-                    if (!(a == x && c == z)) { //we already tilled the block at x, y, z
+                for (int c = z - 1; c <= z + 1; c++) { // don't care about y levels with a hoe
+                    if (!(a == x && c == z)) { // we already tilled the block at x, y, z
                         ToolHelper.hoeBlock(stack, world, a, y, c, sideHit, player);
                     }
                 }
@@ -131,21 +160,27 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
         }
 
         ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack));
-        world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
+        world.playSoundEffect(
+            (double) ((float) x + 0.5F),
+            (double) ((float) y + 0.5F),
+            (double) ((float) z + 0.5F),
+            Blocks.farmland.stepSound.getStepResourcePath(),
+            (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F,
+            Blocks.farmland.stepSound.getPitch() * 0.8F);
 
         return true;
     }
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if(entityAttacker instanceof EntityPlayer)
+        if (entityAttacker instanceof EntityPlayer)
             ToolHelper.drainEnergy(stack, (EntityPlayer) entityAttacker, getEnergyPerUse(stack) * 2);
 
         return true;
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
         try {
             list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
@@ -162,25 +197,25 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
             } else {
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogHelper.warn("Something went wrong with the tooltips!");
             e.printStackTrace();
         }
     }
 
     @Override
-    public String getUnlocalizedName(){
+    public String getUnlocalizedName() {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + "flux_hoe";
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack){
+    public String getUnlocalizedName(ItemStack stack) {
         return getUnlocalizedName();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister iconRegister){
+    public void registerIcons(IIconRegister iconRegister) {
         itemIcon = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + "flux_hoe");
     }
 
@@ -193,7 +228,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public ItemStack setEnergy(ItemStack stack, int energy) {
-        if(stack.stackTagCompound == null){
+        if (stack.stackTagCompound == null) {
             stack.stackTagCompound = new NBTTagCompound();
         }
 
@@ -225,8 +260,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) {
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
         int energy = getEnergyStored(stack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
@@ -245,11 +279,9 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public int getEnergyStored(ItemStack stack) {
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
-        if(stack.stackTagCompound.hasKey("Energy"))
-            return stack.stackTagCompound.getInteger("Energy");
+        if (stack.stackTagCompound.hasKey("Energy")) return stack.stackTagCompound.getInteger("Energy");
         else {
             stack.stackTagCompound.setInteger("Energy", 0);
             return 0;

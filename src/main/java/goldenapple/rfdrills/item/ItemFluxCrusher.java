@@ -1,18 +1,8 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.item.IEmpowerableItem;
-import cofh.core.item.IEqualityOverrideItem;
-import cofh.core.util.KeyBindingEmpower;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import goldenapple.rfdrills.RFDrills;
-import goldenapple.rfdrills.config.ConfigHandler;
-import goldenapple.rfdrills.reference.Names;
-import goldenapple.rfdrills.reference.Reference;
-import goldenapple.rfdrills.util.LogHelper;
-import goldenapple.rfdrills.util.MiscUtil;
-import goldenapple.rfdrills.util.StringHelper;
-import goldenapple.rfdrills.util.ToolHelper;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -31,16 +21,46 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
-public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
-    private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.cloth, Material.gourd);
+import cofh.api.item.IEmpowerableItem;
+import cofh.core.item.IEqualityOverrideItem;
+import cofh.core.util.KeyBindingEmpower;
+import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.config.ConfigHandler;
+import goldenapple.rfdrills.reference.Names;
+import goldenapple.rfdrills.reference.Reference;
+import goldenapple.rfdrills.util.LogHelper;
+import goldenapple.rfdrills.util.MiscUtil;
+import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
+
+public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
+
+    private static final Set<Material> effectiveMaterials = Sets.newHashSet(
+        Material.anvil,
+        Material.clay,
+        Material.craftedSnow,
+        Material.glass,
+        Material.dragonEgg,
+        Material.grass,
+        Material.ground,
+        Material.ice,
+        Material.snow,
+        Material.iron,
+        Material.rock,
+        Material.sand,
+        Material.coral,
+        Material.wood,
+        Material.cloth,
+        Material.gourd);
 
     private static final ToolTier tier = ToolTier.FLUX_CRUSHER;
     private IIcon iconEmpty;
     private IIcon iconActive;
-    public ItemFluxCrusher(){
+
+    public ItemFluxCrusher() {
         super(1.0F, tier.material, null);
         this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
@@ -55,54 +75,79 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean canHarvestBlock(Block block, ItemStack stack) {
-        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial());
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack)
+            && effectiveMaterials.contains(block.getMaterial());
     }
 
     @Override
     public float func_150893_a(ItemStack stack, Block block) {
-        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack)
+            && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
     }
 
     @Override
     public int getHarvestLevel(ItemStack stack, String toolClass) {
-        if(getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= tier.energyPerBlock)
+        if (getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= tier.energyPerBlock)
             return super.getHarvestLevel(stack, toolClass);
-        else
-            return -1;
+        else return -1;
     }
 
     @Override
     public float getDigSpeed(ItemStack stack, Block block, int meta) {
-        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta)){
-            switch (getMode(stack)){
-                case 0: return efficiencyOnProperMaterial;
-                case 1: return efficiencyOnProperMaterial / 3;
-                case 2: return efficiencyOnProperMaterial / 6;
+        if (getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta)
+            && ToolHelper.isToolEffective(stack, block, meta)) {
+            switch (getMode(stack)) {
+                case 0:
+                    return efficiencyOnProperMaterial;
+                case 1:
+                    return efficiencyOnProperMaterial / 3;
+                case 2:
+                    return efficiencyOnProperMaterial / 6;
                 default:
                     LogHelper.warn("Illegal drill mode!");
                     return efficiencyOnProperMaterial;
             }
-        }else
-            return 1.0F;
+        } else return 1.0F;
     }
 
-    private int getEnergyPerUse(ItemStack stack){
-        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
+    private int getEnergyPerUse(ItemStack stack) {
+        return Math.round(
+            tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); // Vanilla
+                                                                                                                        // formula:
+                                                                                                                        // a
+                                                                                                                        // 100%
+                                                                                                                        // /
+                                                                                                                        // (unbreaking
+                                                                                                                        // level
+                                                                                                                        // +
+                                                                                                                        // 1)
+                                                                                                                        // chance
+                                                                                                                        // to
+                                                                                                                        // not
+                                                                                                                        // take
+                                                                                                                        // damage
     }
 
-    private int getEnergyPerUseWithMode(ItemStack stack){
+    private int getEnergyPerUseWithMode(ItemStack stack) {
         int energy = getEnergyPerUse(stack);
-        switch (getMode(stack)){
-            case 0: break;
-            case 1: energy = energy * 5; break;
-            case 2: energy = energy * 10; break;
-            default: LogHelper.warn("Illegal drill mode!"); break;
+        switch (getMode(stack)) {
+            case 0:
+                break;
+            case 1:
+                energy = energy * 5;
+                break;
+            case 2:
+                energy = energy * 10;
+                break;
+            default:
+                LogHelper.warn("Illegal drill mode!");
+                break;
         }
         return energy;
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
         list.add(setEnergy(new ItemStack(item, 1, 0), tier.maxEnergy));
@@ -120,7 +165,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return Math.max(1.0 - (double)getEnergyStored(stack) / (double)tier.maxEnergy, 0);
+        return Math.max(1.0 - (double) getEnergyStored(stack) / (double) tier.maxEnergy, 0);
     }
 
     @Override
@@ -137,19 +182,23 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
 
-        if(!world.isRemote && getEnergyStored(stack) > 0){
+        if (!world.isRemote && getEnergyStored(stack) > 0) {
             int radius = 0;
 
-            switch (getMode(stack)){
-                case 1: radius = 1; break;
-                case 2: radius = 2; break;
+            switch (getMode(stack)) {
+                case 1:
+                    radius = 1;
+                    break;
+                case 2:
+                    radius = 2;
+                    break;
             }
 
             for (int a = x - radius; a <= x + radius; a++) {
                 for (int b = y - radius; b <= y + radius; b++) {
-                    for(int c = z - radius; c <= z + radius; c++) {
+                    for (int c = z - radius; c <= z + radius; c++) {
                         if (world.blockExists(a, b, c) && !world.isAirBlock(a, b, c)) {
-                            if (!(a == x && b == y && c == z)) //don't harvest the same block twice silly!
+                            if (!(a == x && b == y && c == z)) // don't harvest the same block twice silly!
                                 ToolHelper.harvestBlock(world, a, b, c, player);
                         }
                     }
@@ -163,14 +212,14 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if(entityAttacker instanceof EntityPlayer)
+        if (entityAttacker instanceof EntityPlayer)
             ToolHelper.drainEnergy(stack, (EntityPlayer) entityAttacker, getEnergyPerUse(stack) * 2);
         return true;
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if(!world.isRemote && player.isSneaking() && ConfigHandler.modeShiftClickTE){
+        if (!world.isRemote && player.isSneaking() && ConfigHandler.modeShiftClickTE) {
             setEmpoweredState(stack, !isEmpowered(stack));
             onStateChange(player, stack);
         }
@@ -178,37 +227,31 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
         list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
 
         if (MiscUtil.isShiftPressed()) {
             list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUseWithMode(stack)));
-            if(tier.hasModes)
-                list.add(writeModeInfo(stack));
+            if (tier.hasModes) list.add(writeModeInfo(stack));
             list.add(StatCollector.translateToLocal("rfdrills.crusher.tooltip"));
-            if(tier.material.getEnchantability() > 0)
+            if (tier.material.getEnchantability() > 0)
                 list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
             if (tier.hasModes) {
-                if(ConfigHandler.modeShiftClickTE)
+                if (ConfigHandler.modeShiftClickTE)
                     list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.sneak.tooltip"));
-                else
-                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
+                else list.add(
+                    StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
             }
-            if(MiscUtil.isItemSilent(stack))
-                list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
-        } else
-            list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
+            if (MiscUtil.isItemSilent(stack)) list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
+        } else list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
 
     @Override
     public IIcon getIcon(ItemStack stack, int renderPass) {
-        if(getEnergyStored(stack) == 0)
-            return iconEmpty;
-        else if(getMode(stack) == 1 || getMode(stack) == 2)
-            return iconActive;
-        else
-            return itemIcon;
+        if (getEnergyStored(stack) == 0) return iconEmpty;
+        else if (getMode(stack) == 1 || getMode(stack) == 2) return iconActive;
+        else return itemIcon;
     }
 
     @Override
@@ -220,7 +263,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public String getUnlocalizedName() {
-        return "item." +Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER;
+        return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER;
     }
 
     @Override
@@ -228,26 +271,26 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER;
     }
 
-    public int getMode(ItemStack stack){
-        if(!tier.hasModes) return 0;
-        if(getEnergyStored(stack) == 0) return 0;
-        if(stack.stackTagCompound == null) return 0;
+    public int getMode(ItemStack stack) {
+        if (!tier.hasModes) return 0;
+        if (getEnergyStored(stack) == 0) return 0;
+        if (stack.stackTagCompound == null) return 0;
 
-        if(stack.stackTagCompound.hasKey("Mode")) {
+        if (stack.stackTagCompound.hasKey("Mode")) {
             return stack.stackTagCompound.getByte("Mode");
-        }else{
+        } else {
             return 0;
         }
     }
 
     public boolean setMode(ItemStack stack, int mode) {
-        if(getEnergyStored(stack) == 0) return false;
+        if (getEnergyStored(stack) == 0) return false;
 
-        if(stack.stackTagCompound == null){
+        if (stack.stackTagCompound == null) {
             stack.stackTagCompound = new NBTTagCompound();
         }
 
-        stack.stackTagCompound.setByte("Mode", (byte)mode);
+        stack.stackTagCompound.setByte("Mode", (byte) mode);
         return true;
     }
 
@@ -259,16 +302,15 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public ItemStack setEnergy(ItemStack stack, int energy){
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+    public ItemStack setEnergy(ItemStack stack, int energy) {
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
         stack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(stack)));
         return stack;
     }
 
     @Override
-    public ItemStack drainEnergy(ItemStack stack, int energy){
+    public ItemStack drainEnergy(ItemStack stack, int energy) {
         return setEnergy(stack, Math.max(getEnergyStored(stack) - energy, 0));
     }
 
@@ -278,8 +320,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public String writeModeInfo(ItemStack stack){
-        if(!tier.hasModes) return "";
+    public String writeModeInfo(ItemStack stack) {
+        if (!tier.hasModes) return "";
         switch (getMode(stack)) {
             case 0:
                 return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
@@ -301,9 +343,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     /* IEnergyContainerItem */
 
     @Override
-    public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+    public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) { // stolen from ItemEnergyContainer
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
         int energy = getEnergyStored(stack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
@@ -322,12 +363,10 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public int getEnergyStored(ItemStack stack) {
-        if(stack.stackTagCompound == null)
-            stack.stackTagCompound = new NBTTagCompound();
+        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
 
-        if(stack.stackTagCompound.hasKey("Energy"))
-            return stack.stackTagCompound.getInteger("Energy");
-        else{
+        if (stack.stackTagCompound.hasKey("Energy")) return stack.stackTagCompound.getInteger("Energy");
+        else {
             stack.stackTagCompound.setInteger("Energy", 0);
             return 0;
         }
@@ -354,23 +393,19 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean setEmpoweredState(ItemStack stack, boolean b) {
-        if(!tier.hasModes) return false;
+        if (!tier.hasModes) return false;
 
-        if(getMode(stack) == 2)
-            setMode(stack, 0);
-        else
-            setMode(stack, getMode(stack) + 1);
+        if (getMode(stack) == 2) setMode(stack, 0);
+        else setMode(stack, getMode(stack) + 1);
 
         return true;
     }
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(!MiscUtil.isItemSilent(stack)) {
-            if (getMode(stack) == 0)
-                player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-            else
-                player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        if (!MiscUtil.isItemSilent(stack)) {
+            if (getMode(stack) == 0) player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+            else player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
         }
 
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));

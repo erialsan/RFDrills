@@ -1,6 +1,7 @@
 package goldenapple.rfdrills.reference;
 
 public class Metadata {
+
     public static final int MOTOR_LEASDSTONE = 0;
     public static final int MOTOR_HARDENED = 1;
     public static final int MOTOR_REDSTONE = 2;

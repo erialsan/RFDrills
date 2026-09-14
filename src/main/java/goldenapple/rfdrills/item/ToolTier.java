@@ -3,7 +3,8 @@ package goldenapple.rfdrills.item;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 
-public class ToolTier { //look into ConfigHandler for more info
+public class ToolTier { // look into ConfigHandler for more info
+
     public static ToolTier DRILL1;
     public static ToolTier DRILL2;
     public static ToolTier DRILL3;
@@ -26,7 +27,8 @@ public class ToolTier { //look into ConfigHandler for more info
     public boolean canBreak;
     public boolean hasModes;
 
-    public ToolTier(Item.ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity, boolean canBreak, boolean hasModes){
+    public ToolTier(Item.ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity,
+        boolean canBreak, boolean hasModes) {
         this.material = material;
         this.maxEnergy = maxEnergy;
         this.rechargeRate = rechargeRate;

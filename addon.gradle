@@ -1,0 +1,4 @@
+ext.modVersion = "1.7.3"
+version = ext.modVersion
+
+sourceSets.main.java.srcDir("src/api")
